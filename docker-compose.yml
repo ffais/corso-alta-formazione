@@ -1,0 +1,58 @@
+version: "3"
+
+services:
+    af-zipkin:
+        image: openzipkin/zipkin
+        ports:
+            - 9411:9411
+        networks:
+            - afnet
+    af-registry:
+        build:
+            context: ./registry
+        ports:
+            - 8761:8761
+        networks:
+            - afnet   
+    af-gateway:
+        build:
+            context: ./gateway
+        ports:
+            - 9000:8080
+        depends_on:
+            - af-registry
+            - af-zipkin  
+        networks:
+            - afnet
+    mongo:
+        image: mongo
+        volumes:
+            - mongo-data:/data/db
+        networks:
+            - afnet
+        ports:
+            - 27017:27017
+    af-purchase:
+        build:
+            context: ./shop-purchase
+        ports:
+            - 8085:8080
+        depends_on:
+            - mongo
+        networks:
+            - afnet
+    af-catalog:
+        build:
+            context: ./shop-catalog
+        ports:
+            - 8080:8080
+        depends_on:
+            - mongo
+        networks:
+            - afnet
+            
+networks:
+    afnet:
+        driver: bridge
+volumes:
+    mongo-data:
