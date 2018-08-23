@@ -8,20 +8,27 @@ services:
         networks:
             - afnet
     af-registry:
-        build:
-            context: ./registry
+        image: smartcommunitylab/af-registry
+        deploy:
+            placement:
+                constraints: [node.role == manager]
         ports:
             - 8761:8761
         networks:
-            - afnet   
+            afnet:
+            mon_net:
+              aliases: 
+                - prometheus-eureka-server   
     af-gateway:
-        build:
-            context: ./gateway
+        image: smartcommunitylab/af-gateway
         ports:
             - 9000:8080
         depends_on:
             - af-registry
             - af-zipkin  
+        deploy:
+            placement:
+                 constraints: [node.role == manager]
         networks:
             - afnet
     mongo:
@@ -29,12 +36,16 @@ services:
         volumes:
             - mongo-data:/data/db
         networks:
-            - afnet
-        ports:
-            - 27017:27017
+            afnet:
+              aliases:
+                 - mongo
+        deploy:
+            placement:
+                 constraints: [node.role == manager]
     af-purchase:
-        build:
-            context: ./shop-purchase
+        image: smartcommunitylab/af-purchase
+        deploy:
+            replicas: 2
         ports:
             - 8085:8080
         depends_on:
@@ -42,17 +53,30 @@ services:
         networks:
             - afnet
     af-catalog:
-        build:
-            context: ./shop-catalog
+        image: smartcommunitylab/af-catalog:2
+        deploy:
+            replicas: 2
         ports:
             - 8080:8080
         depends_on:
             - mongo
         networks:
             - afnet
-            
+    visualizer:
+        image: bretfisher/visualizer:latest
+        ports:
+            - "18080:8080"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock"
+        deploy:
+            placement:
+                 constraints: [node.role == manager]
+        networks:
+            - afnet            
 networks:
+    mon_net:
+        external: true
     afnet:
-        driver: bridge
+        driver: overlay
 volumes:
     mongo-data:
