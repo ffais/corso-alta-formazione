@@ -24,5 +24,3 @@
 /nbdist/
 /.nb-gradle/
 
-Dockerfile
-docker-compose.yml
