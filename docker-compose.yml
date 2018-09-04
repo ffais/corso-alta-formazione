@@ -1,5 +1,11 @@
 version: "3"
 
+networks:
+    afnet:
+        driver: overlay
+volumes:
+    mongo-data:
+
 services:
     af-zipkin:
         image: openzipkin/zipkin
@@ -72,10 +78,3 @@ services:
                  constraints: [node.role == manager]
         networks:
             - afnet            
-networks:
-    swarmon_net:
-        external: true
-    afnet:
-        driver: overlay
-volumes:
-    mongo-data:
