@@ -8,7 +8,7 @@ services:
         networks:
             - afnet
     af-registry:
-        image: smartcommunitylab/af-registry
+        image: smartcommunitylab/af-registry:prom
         deploy:
             placement:
                 constraints: [node.role == manager]
@@ -16,7 +16,6 @@ services:
             - 8761:8761
         networks:
             afnet:
-            swarmon_net:
               aliases: 
                 - prometheus-eureka-server   
     af-gateway:

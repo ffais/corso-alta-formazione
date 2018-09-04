@@ -1,6 +1,10 @@
 package com.example.shoppurchase.domain;
 
 import org.springframework.data.annotation.Id;
+import java.net.InetAddress;
+import org.springframework.data.annotation.Transient;
+import java.net.UnknownHostException;
+
 
 public class Purchase {
 
@@ -9,7 +13,16 @@ public class Purchase {
 	private String productId, productTitle, productCategory, userId;
 	private Double price;
 	private Integer quantity;
+        @Transient
+        public String hostname;
+	public Purchase () {
+		try {
+			hostname = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e){
 
+		}
+
+	}
 	public String getId() {
 		return id;
 	}

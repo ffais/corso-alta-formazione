@@ -37,10 +37,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-                        <groupId>at.twinformatics</groupId>
-                        <artifactId>eureka-consul-adapter</artifactId>
-                        <version>${eureka-consul-adapter.version}<version>
-                </dependency>
+			<groupId>at.twinformatics</groupId>
+			<artifactId>eureka-consul-adapter</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
